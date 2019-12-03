@@ -19,17 +19,14 @@
 
 #include "vex.h"
 #include "math.h"
+#include "myUtils.h"
 
 using namespace vex;
 
-namespace myUtils {
+/*namespace myUtils {
   // Returns the clipped value of a number. Clip 'number' if 'number' is less than 'min' or greater than 'max'
-  float clip (float n, float lBound, float rBound) {
-    if (n < lBound) n = lBound;
-    if (n > rBound) n = rBound;
-    return n;
-  }
-}
+  
+}*/
 
 namespace MotorBase {
   directionType getDirection (float number) {
@@ -50,12 +47,12 @@ namespace MotorBase {
         float BackLeft = (-gamepad1LeftY + gamepad1LeftX - gamepad1RightX);
 
         // clip the right/left values so that the values never exceed +/- 1
-        FrontRight = myUtils::clip(FrontRight, -100, 100);
-        FrontLeft = myUtils::clip(FrontLeft, -100, 100);
-        BackLeft = myUtils::clip(BackLeft, -100, 100);
-        BackRight = myUtils::clip(BackRight, -100, 100);
+        FrontRight = clip(FrontRight, -100, 100);
+        FrontLeft = clip(FrontLeft, -100, 100);
+        BackLeft = clip(BackLeft, -100, 100);
+        BackRight = clip(BackRight, -100, 100);
 
-        // write the values to the motors
+        //spin the motors 
         MotorBaseNE.spin(getDirection(FrontRight), fabs(FrontRight), percent);
         MotorBaseNW.spin(getDirection(FrontLeft), fabs(FrontLeft), percent);
         MotorBaseSW.spin(getDirection(BackLeft), fabs(BackLeft), percent);
