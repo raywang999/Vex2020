@@ -29,41 +29,52 @@ using namespace vex;
 }*/
 
 namespace MotorBase {
-  directionType getDirection (float number) {
-    if (number > 0.0) return directionType(fwd);
-    else return directionType(rev);
+  void Lift(bool up, bool down){
+    if (up){
+      drive(LeftMotorLift, 100);
+      drive(RightMotorLift, 100);
+    } 
+    else if (down){
+      drive(LeftMotorLift, -100);
+      drive(RightMotorLift, -100);
+    }
+    else{
+      drive(LeftMotorLift, 0);
+      drive(RightMotorLift, 0);
+    }
   }
-
-  void TranslateAndMove (float gamepad1LeftY, float gamepad1LeftX, float gamepad1RightX) {
+  void TranslateAndMove (float gamepad1LeftY, float gamepad1LeftX) {
         // float gamepad1LeftY = -gamepad1.left_stick_y;
         // float gamepad1LeftX = gamepad1.left_stick_x;
         // float gamepad1RightX = gamepad1.right_stick_x;
 
         // holonomic formulas
 
-        float FrontLeft = (-gamepad1LeftY - gamepad1LeftX - gamepad1RightX);
+        /*float FrontLeft = (-gamepad1LeftY - gamepad1LeftX - gamepad1RightX);
         float FrontRight = (gamepad1LeftY - gamepad1LeftX - gamepad1RightX);
         float BackRight = (gamepad1LeftY + gamepad1LeftX - gamepad1RightX);
         float BackLeft = (-gamepad1LeftY + gamepad1LeftX - gamepad1RightX);
-
         // clip the right/left values so that the values never exceed +/- 1
         FrontRight = clip(FrontRight, -100, 100);
         FrontLeft = clip(FrontLeft, -100, 100);
         BackLeft = clip(BackLeft, -100, 100);
         BackRight = clip(BackRight, -100, 100);
+        */
+        //printf("leftX: %f | leftY: %f | buttonL1 : %d\n", gamepad1LeftX, gamepad1LeftY, Controller1.ButtonL1.pressing());
 
         //spin the motors 
-        MotorBaseNE.spin(getDirection(FrontRight), fabs(FrontRight), percent);
-        MotorBaseNW.spin(getDirection(FrontLeft), fabs(FrontLeft), percent);
-        MotorBaseSW.spin(getDirection(BackLeft), fabs(BackLeft), percent);
-        MotorBaseSE.spin(getDirection(BackRight), fabs(BackRight), percent);
+        float leftDrive = gamepad1LeftY + gamepad1LeftX;
+        float rightDrive = gamepad1LeftY - gamepad1LeftX;
+        drive(LeftMotorBase, leftDrive);
+        drive(RightMotorBase, rightDrive);
   }
 
   void Move () {
-    MotorBaseNE.power();
+    /*MotorBaseNE.power();
     MotorBaseNW.power();
     MotorBaseSE.power();
     MotorBaseSW.power();
+    */
   }
 }
 
@@ -127,9 +138,9 @@ void usercontrol(void) {
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
 
-    MotorBase::TranslateAndMove(Controller1.Axis3.position(percent), Controller1.Axis4.position(percent), Controller1.Axis1.position(percent));
-
-    MotorBase::Move();
+    MotorBase::TranslateAndMove(Controller1.Axis3.position(percent), Controller1.Axis4.position(percent));
+    MotorBase::Lift(Controller1.ButtonL1.pressing(), Controller1.ButtonL2.pressing());
+    //MotorBase::Move();
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
@@ -146,7 +157,6 @@ int main() {
   //Controller1.Screen.print()
   // Run the pre-autonomous function.
   pre_auton();
-
   // Prevent main from exiting with an infinite loop.
   while (true) {
     wait(100, msec);
