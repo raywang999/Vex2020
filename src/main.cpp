@@ -31,16 +31,16 @@ using namespace vex;
 namespace MotorBase {
   void Lift(bool up, bool down){
     if (up){
-      drive(LeftMotorLift, 100);
-      drive(RightMotorLift, 100);
+      drive(LeftMotorLift, 30);
+      drive(RightMotorLift, -30);
     } 
     else if (down){
-      drive(LeftMotorLift, -100);
-      drive(RightMotorLift, -100);
+      drive(LeftMotorLift, -30);
+      drive(RightMotorLift, 30);
     }
     else{
-      drive(LeftMotorLift, 0);
-      drive(RightMotorLift, 0);
+      drive(LeftMotorLift, 1.2);
+      drive(RightMotorLift, 1.2);
     }
   }
   void TranslateAndMove (float gamepad1LeftY, float gamepad1LeftX) {
