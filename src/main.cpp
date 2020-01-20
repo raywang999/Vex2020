@@ -39,8 +39,10 @@ namespace MotorBase {
       drive(RightMotorLift, 30);
     }
     else{
-      drive(LeftMotorLift, 1.2);
-      drive(RightMotorLift, 1.2);
+      //drive(LeftMotorLift, 0);
+      //drive(RightMotorLift, 0);
+      LeftMotorLift.stop(brakeType::brake);
+      RightMotorLift.stop(brakeType::brake);
     }
   }
   void TranslateAndMove (float gamepad1LeftY, float gamepad1LeftX) {
@@ -63,10 +65,12 @@ namespace MotorBase {
         //printf("leftX: %f | leftY: %f | buttonL1 : %d\n", gamepad1LeftX, gamepad1LeftY, Controller1.ButtonL1.pressing());
 
         //spin the motors 
-        float leftDrive = gamepad1LeftY + gamepad1LeftX;
+        float leftDrive = gamepad1LeftY + gamepad1LeftX; // I like comment
         float rightDrive = gamepad1LeftY - gamepad1LeftX;
         drive(LeftMotorBase, leftDrive);
-        drive(RightMotorBase, rightDrive);
+        drive(RightMotorBase, rightDrive*-1);
+        /*drive(temp1, 1);
+        drive(temp2, 1);*/
   }
 
   void Move () {
@@ -75,6 +79,24 @@ namespace MotorBase {
     MotorBaseSE.power();
     MotorBaseSW.power();
     */
+  }
+  void grip(){
+    double rot = 0.125;
+    temp1.setBrake(brakeType::coast);
+    temp2.setBrake(brakeType::coast);
+    temp1.rotateTo(rot, rotationUnits::rev, false);
+    temp2.rotateTo(rot*-1, rotationUnits::rev, false);
+    temp1.setBrake(brakeType::hold);
+    temp2.setBrake(brakeType::hold);
+  }
+  void release(){
+    double rot = 0.125;
+    temp1.setBrake(brakeType::coast);
+    temp2.setBrake(brakeType::coast);
+    temp1.rotateTo(rot*-1, rotationUnits::rev, false);
+    temp2.rotateTo(rot, rotationUnits::rev, false);
+    temp1.setBrake(brakeType::brake);
+    temp2.setBrake(brakeType::brake);
   }
 }
 
@@ -140,6 +162,8 @@ void usercontrol(void) {
 
     MotorBase::TranslateAndMove(Controller1.Axis3.position(percent), Controller1.Axis4.position(percent));
     MotorBase::Lift(Controller1.ButtonL1.pressing(), Controller1.ButtonL2.pressing());
+    Controller1.ButtonR1.pressed(MotorBase::grip);
+    Controller1.ButtonR1.released(MotorBase::release);
     //MotorBase::Move();
 
     wait(20, msec); // Sleep the task for a short amount of time to

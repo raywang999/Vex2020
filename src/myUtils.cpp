@@ -29,5 +29,6 @@ directionType getDirection (float number) {
 }*/
 
 void drive(motor Motor, float v){
+  Motor.stop(brakeType::coast);
   Motor.spin(getDirection(v), fabs(v), percent);
 }
