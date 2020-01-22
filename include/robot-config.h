@@ -7,8 +7,7 @@ extern motor LeftMotorBase;
 extern motor RightMotorBase;
 extern motor LeftMotorLift;
 extern motor RightMotorLift;
-extern motor temp1;
-extern motor temp2;
+extern motor Grip;
 extern controller Controller1;
 
 /**
