@@ -24,10 +24,6 @@ directionType getDirection (float number) {
       return directionType(rev);
 }
 
-/*float leftAlgo(float left, float right){
-  
-}*/
-
 void drive(motor Motor, float v){
   Motor.spin(getDirection(v), fabs(v), percent);
 }
