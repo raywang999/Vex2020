@@ -44,12 +44,12 @@ namespace MotorBase {
         drive(RightMotorBase, rightDrive*-1);
   }
   void grip(){
-    double rot = 0.125;
-    Grip.rotateTo(rot, rotationUnits::rev, false);
+    double rot = 0.25;
+    Grip.rotateTo(rot*-1, rotationUnits::rev, false);
   }
   void release(){
-    double rot = 0.125;
-    Grip.rotateTo(rot*-1, rotationUnits::rev, false);
+    double rot = 0.25;
+    Grip.rotateTo(rot, rotationUnits::rev, false);
   }
 }
 
@@ -103,6 +103,7 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
+
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
@@ -110,7 +111,7 @@ void usercontrol(void) {
     MotorBase::TranslateAndMove(Controller1.Axis3.position(percent), Controller1.Axis4.position(percent));
     MotorBase::Lift(Controller1.ButtonL1.pressing(), Controller1.ButtonL2.pressing());
     Controller1.ButtonR1.pressed(MotorBase::grip);
-    Controller1.ButtonR1.released(MotorBase::release);
+    Controller1.ButtonR2.pressed(MotorBase::release);
     //MotorBase::Move();
 
     wait(20, msec); // Sleep the task for a short amount of time to
